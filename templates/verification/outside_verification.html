@@ -1,0 +1,149 @@
+{% extends "picture.html" %}
+{% block title %}Verification{% endblock %}
+
+{% block content %}
+    <!-- Main jumbotron for a primary marketing message or call to action -->
+<div class="container">
+  <div class="row">
+    <div class="col-md-12">    
+      <h1 class="page-header">VERIFICATION EVIDENCE</h1>
+      <p>The verification process is to ensure that the teacher judgements are consistent with the standard, before they are reported to NZQA. Samples of work around grades boundaries should be verified by a subject specialist with standard-specific knowledge.</p>
+      <hr>
+
+      <form method="POST" role="form">
+        
+          <div class="row">
+            <div class="col-md-8">
+              <div class="form-group">
+                {{form.standard.label}} {{form.standard(class="form-control")}}
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-4">
+              <div class="form-group">
+                {{form.student.label}} {{form.student(class="form-control")}}
+              </div>
+                    {% if form.student.errors %}
+                      {% for error in form.student.errors %}
+                          <div class="alert alert-danger" role="alert">{{ error }}</div>
+                      {% endfor %}
+                    {% endif %}
+              
+            </div>
+          </div>
+     
+          <div class="row">
+            <div class="col-md-4">
+              <div class="form-group">
+                {{form.verifier_name.label}} {{form.verifier_name(class="form-control")}}
+              </div>
+                    {% if form.verifier_name.errors %}
+                      {% for error in form.verifier_name.errors %}
+                          <div class="alert alert-danger" role="alert">{{ error }}</div>
+                      {% endfor %}
+                    {% endif %}
+
+              <div class="form-group">
+                {{form.verifier_school.label}} {{form.verifier_school(class="form-control")}}
+              </div>
+                    {% if form.verifier_school.errors %}
+                      {% for error in form.verifier_school.errors %}
+                          <div class="alert alert-danger" role="alert">{{ error }}</div>
+                      {% endfor %}
+                    {% endif %}
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-4 ">
+              <div class="form-group">
+                {{form.verifiers_grade.label}} {{form.verifiers_grade(class="form-control")}}
+              </div>
+            </div>
+          </div>
+         
+          <div class="row">
+            <div class="col-md-12 ">
+              <div class="form-group">
+                {{form.discussion.label}} {{form.discussion(class="form-control")}}
+              </div>
+               <button onclick="appendText()" type="button" class="btn btn-info btn" data-toggle="modal" data-target="#myModal">Continue</button>
+            </div>
+            
+          </div>
+
+          <script>
+          function appendText() {
+              var txt1 = $("#verifier_school").val();
+              var txt2 = $("#verifier_school_other").val();
+              var txt3 = $("#verifier_name").val();
+              var txt4 = $("#student").val();
+              var txt5 = $("#standard option:selected").text();
+              var txt6 = $("#verifiers_grade").val();
+              if (!txt2 && txt1 && txt3 && txt4) {
+                $("#finished_p").replaceWith('<p id="finished_p">PLEASE READ <br> By clicking the button to the left you are signing that you: <u><b>'+txt3+'</b></u><br> from the school <u><b>'+txt1+'</b></u><br> have verified work from student: <u><b>'+txt4+'</b></u><br> for the standard: <br><u><b>'+txt5+'</b></u><br> judging the work to have the grade: <br><u><b>'+txt6+'</b></u></p>');
+              }
+              else if (txt1 && txt2 && txt3 && txt4) {
+                $("#finished_p").replaceWith('<p id="finished_p">PLEASE READ <br> By clicking the button to the left you are signing that you: <u><b>'+txt3+'</b></u><br> from the school <u><b>'+txt2+'</b></u><br> have verified work from student: <u><b>'+txt4+'</b></u><br> for the standard: <br><u><b>'+txt5+'</b></u><br> judging the work to have the grade: <br><u><b>'+txt6+'</b></u></p>');
+              }
+              else {
+                $("#finished_p").replaceWith('<p id="finished_p">You are required to enter data for <u><b>"Student Name"</b></u> and <u><b>"Teacher Name (Verifier)</b></u>"<br><small>Close this window an re-enter values in these fields</small></p>');
+              }  
+            }
+          </script>
+
+        
+          
+            <div class="modal fade" id="myModal" role="dialog">
+              <div class="modal-dialog modal-lg">
+    
+                <!-- Modal content-->
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Sign off - Required</h4>
+                  </div>
+                  <div class="modal-body">
+
+                    
+                   
+                      <div id="finished_checkbox" class="checkbox">
+                      
+                    
+                      <label>
+                      {{form.finished(class="checkbox", data_toggle="toggle")}}
+                      {{form.finished.label}}
+                      </label>
+                       
+                      </div>
+                      {% if form.finished.errors %}
+                          {% for error in form.finished.errors %}
+                              <div class="alert alert-danger" role="alert">{{ error }}</div>
+                          {% endfor %}
+                      {% endif %}
+                    
+
+                      
+                    <br>
+                      <button type="submit" class="btn btn-primary">Submit Process</button>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-default btn-sm" data-dismiss="modal">Close</button>
+                  </div>
+                </div>
+                
+              </div>
+            </div>
+
+                                
+      </form>         
+    </div>
+    <!-- column -->
+  </div>
+  <!-- row -->
+
+ 
+   
+{% endblock %}

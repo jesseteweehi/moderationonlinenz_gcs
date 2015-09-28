@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block title %}{{var.subject_id}}{% endblock %}
+
+{% block content %} 
+
+<div class="container" style="margin-top:20px;">
+  <h2>Standards</h2>
+  <p></p>            
+  <table class="table">
+    <thead>
+      <tr>
+        <th></th>
+        <th>Subject</th>
+        <th>Standard</th>
+        <th>Title</th>
+        <th>Credits</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="btn btn-primary btn-xs"  href="../standards/delete/{{var.key.id()}}" role="button">Delete</a></td>
+        <td>{{var.subject_title}} - {{var.subject_id}}</td>
+        <td>{{var.standard_no}} - {{var.version}}</td>
+        <td>{{var.title}}</td>
+        <td>{{var.credits}}</td>
+      </tr>
+    </tbody>
+  </table>
+
+{% endblock %}

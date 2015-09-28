@@ -1,0 +1,373 @@
+{% extends "base.html" %}
+{% block title %}{{standard.subject_id}}{% endblock %}
+
+{% block content %}
+
+<div class="container">
+
+  <div class="row" id="standard" style="margin-top:10px;">
+    <div class="col-md-12">
+       {% if before %}
+       <p class="pull-left"><a href="../standards/{{before}}"><i class="fa fa-angle-double-left"></i> Standard Before</a></p>
+       {% endif %}
+       {% if after %}
+        <p class="pull-right"><a href="../standards/{{after}}">Standard After <i class="fa fa-angle-double-right"></i></a></p>
+       {% endif %}
+    </div>
+    <div class="col-md-12">
+        <h1><small>{{standard.standard_type}} : </small>{{standard.standard_no}}<small> - Version</small> {{standard.version}}</h1>
+      <hr>
+    </div>
+    <div class="col-md-2">
+      <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#myModal">Delete Standard</button>       
+    </div>
+    <div class="col-md-2 pull-right">
+      <a class="btn btn-primary pull-right"  href="../standards/edit/{{standard.key.id()}}" role="button">Edit Standard</i></a>
+    </div>   
+  </div>
+
+  <div class="row" style="margin-top:20px;">  
+    <div class="col-sm-3">
+        <h4>Course: <small>{{standard.subject_title}} - {{standard.subject_id}}</small></h4>
+    </div>
+    <div class="col-sm-3">
+        <h4>Teacher in Charge: <small>{{standard.tic}}</small></h4>
+    </div>
+    <div class="col-sm-3">
+        <h4>Year of Assessment: <small>{{standard.year}}</small></h4>
+    </div>
+    <div class="col-sm-3">
+        <h4>NZQF Year Level: <small>{{standard.level}}</small></h4>
+    </div>
+
+    <div class="col-sm-12">
+        <h4>Assessment Title/Context: <small>{{standard.title}}</small></h4>
+    </div>
+  </div>
+<hr id="critique">
+{% if critique %}
+    <div class="row ">
+      <div class="col-sm-10">         
+        <h4 class="">CRITIQUING ASSESSMENT MATERIALS<br>
+        <small>The critiquing process ensures the assessment activity <u>meets the requirements</u> specified in the standard and provides the <u>opportunity for students to present evidence at all grades</u>. Assessment materials should be <u>checked against</u> the current <em><u>clarification of the standard, conditions of assessment</em></u> and/or any <em><u>external moderation feedback</u></em> before use.</small>
+        </h4>
+      </div>
+      <div class="col-sm-2">
+          <a class="btn btn-primary btn pull-right"  href="../critique/edit/{{critique.key.id()}}" role="button">Edit critique process checklist</a>
+      </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-4">
+          <div class="panel panel-default">
+          <div class="panel-body">
+            <p><strong>Critiquer : </strong>{{critique.name}}<p>
+            <p><strong>School : </strong>{{critique.school}}<p>
+            <p><strong> Date : </strong>{{critique.modified.strftime('%a %d %b at %I %p')}} UTC
+          </div>
+        </div>
+            <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h5 class="panel-title">Source of materials</h5>
+                    </div>
+                <div class="panel-body">
+                  <ul class="fa-ul">
+                    {% if critique.materials == "Own"%}
+              <li><i class="fa-li fa fa-check fa-lg" style="color:green"></i>Own</li>
+              <li><del>Commercial</del></li>
+              <li><del>Subject Association</del></li>
+              <li><del>TKI / NZQA</del></li>
+              <li><del>Other</del></li>
+              {% endif %}
+              {% if critique.materials == "Commercial"%}
+              <li><del>Own</del></li>
+              <li><i class="fa-li fa fa-check fa-lg" style="color:green"></i>Commercial</li>
+              <li><del>Subject Association</del></li>
+              <li><del>TKI / NZQA</del></li>
+              <li><del>Other</del></li>
+              {% endif %}
+              {% if critique.materials == "Subject"%}
+              <li><del>Own</del></li>
+              <li><del>Commercial</del></li>
+              <li><i class="fa-li fa fa-check fa-lg" style="color:green"></i>Subject Association</li>
+              <li><del>TKI / NZQA</del></li>
+              <li><del>Other</del></li>
+              {% endif %}
+              {% if critique.materials == "TKI"%}
+              <li><del>Own</del></li>
+              <li><del>Commercial</del></li>
+              <li><del>Subject Association</del></li>
+              <li><i class="fa-li fa fa-check fa-lg" style="color:green"></i>TKI / NZQA</li>
+              <li><del>Other</del></li>
+              {% endif %}
+              {% if critique.materials == "Other"%}
+              <li><del>Own</del></li>
+              <li><del>Commercial</del></li>
+              <li><del>Subject Association</del></li>
+              <li><del>TKI / NZQA</del></li>
+              <li><i class="fa-li fa fa-check fa-lg" style="color:green"></i>Other</li>
+              {% endif %}
+            </ul>
+                </div>
+                </div>
+        </div>
+
+
+        <div class="col-sm-8">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Checklist for critiquing</h3>
+                </div>
+                <div class="panel-body">
+                    <ul class="fa-ul">
+                      {% macro icon(name) %}
+                        {% if name == True %}
+                          <i class="fa-li fa fa-check fa-lg" style="color:green"></i>
+                          {% else %}
+                          <i class="fa-li fa fa-times fa-lg" style="color:red"></i>
+                          {% endif %}
+                        {%- endmacro %}
+                        <li>{{icon(critique.check1)}}
+                          The assessment material has been reviewed against the current standard clarification and/or external moderation feedback. (Where the material has been previously critiqued and the standard is unchanged, no further critiquing is required)
+                        </li>
+                        <li>{{icon(critique.check2)}}
+                          Student instructions contain registered standard number, version, title, level & credits
+                  </li>
+                        <li>{{icon(critique.check3)}}
+                          Student instructions are clear and language is appropriate
+                      </li>
+                        <li>{{icon(critique.check4)}}
+                          The assessment is consistent with learning/context/curriculum at the appropriate level
+                        </li>
+                        <li>{{icon(critique.check5)}}
+                          The assessment allows students to achieve all requirements of the standard for all grades
+                        </li>
+                        <li>{{icon(critique.check6)}}
+                          Instructions are consistent with explanatory notes/range statements in the standard
+                        </li>
+                        <li>{{icon(critique.check7)}}
+                          Assessment schedule is consistent with the standard and clarifications documents
+                        </li>
+                        <li>{{icon(critique.check8)}}
+                          Judgement/ sufficiency statement clearly describe performance levels for each grade, e.g. quality & length
+                        </li>
+                        <li>{{icon(critique.check9)}}
+                          Evidence statements allow for a range of acceptable answers from students with specific examples for each grade (N/A/M/E)
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+{% else %}
+<div class="row">
+  <div class="col-sm-10">
+    <p class="lead">
+      The critiquing process ensures the assessment activity meets the requirements specified in the standard and provides the opportunity for students to present evidence at all grades. Assessment materials should be checked against the current clarification of the standard, conditions of assessment and/or any external moderation feedback before use.
+    </p>
+  </div>
+  <div class="col-sm-2">
+    <a class="btn btn-primary pull-right"  href="../critique/create?standard_parent={{standard.key.id()}}" role="button">Edit Critique</a>
+  </div>
+</div>
+{% endif %}
+<hr id="sample">
+{% if sample %}
+    <div class="row">
+      <div class="col-sm-10">
+            <h4>SAMPLES ARE RETAINED & ASSESSMENT MATERIALS REVIEWED<br><h4>
+        </div>
+        <div class="col-sm-2">
+            <a class="btn btn-primary pull-right"  href="../sample/edit/{{sample.key.id()}}" role="button">Edit Sample and Assessment Checklist</a>
+            <p>&nbsp;</p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-4">
+          <div class="panel panel-default">
+            <div class="panel-body">
+              <p><strong>Verifier : </strong>{{sample.name}}<p>
+              <p><strong>School : </strong>{{sample.school}}<p>
+              <p><strong> Date : </strong>{{sample.modified.strftime('%a %d %b at %I %p')}} UTC
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-8">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Checklist</h3>
+                </div>
+                <div class="panel-body">
+                    <ul class="fa-ul">
+                      {% macro icon(name) %}
+                        {% if name == True %}
+                          <i class="fa-li fa fa-check fa-lg" style="color:green"></i>
+                          {% else %}
+                          <i class="fa-li fa fa-times fa-lg" style="color:red"></i>
+                          {% endif %}
+                        {%- endmacro %}
+                        <li>{{icon(sample.check1)}}
+                          The School's random selection procedure has been applied to select work for external moderation, if required.
+                        </li>
+                        <li>{{icon(sample.check2)}}
+                          Assessment materials have been reviewed in response to the assessor and/or verifier feedback.
+                  </li>
+                        <li>{{icon(sample.check3)}}
+                          New benchmark samples have been annotated and/or existing examples of grade boundary decisions have been updated.
+                      </li>
+                        <li>{{icon(sample.check4)}}
+                          Assessment materials and student work are available for external moderation at (indicate file path or location):
+                        </li>
+                        <li>{{icon(sample.check5)}}
+                          Reviewed assessment materials are ready for future use.
+                        </li>
+                    </ul>
+                    <!-- <div class="alert alert-success" role="alert">Completed <span class="glyphicon glyphicon-ok" aria-hidden="true"></span></div>
+                    <div class="alert alert-danger" role="alert">Incomplete <span class="glyphicon glyphicon-remove" aria-hidden="true"></span></div> -->
+                </div>
+            </div>
+        </div>
+      {% if sample.samples_url or sample.samples_other or sample.location_url or sample.location_other %}
+      <div class="col-sm-12">
+        <div class="panel panel-default">
+          <div class="panel-body">
+            {% if sample.samples_url %}
+            <p><strong>Benchmark Samples URL : </strong><a href="{{sample.samples_url}}" target="_blank">{{sample.samples_url}}</a><p>
+            {% endif %}
+            {% if sample.samples_other %}
+            <p><strong>Benchmark Samples Physical Location : </strong>{{sample.samples_other}}<p>
+            {% endif %}
+            {% if sample.location_url %}
+            <p><strong>External Moderation URL : </strong><a href="{{sample.location_url}}" target="_blank">{{sample.location_url}}</a><p>
+            {% endif %}
+            {% if sample.location_other %}
+            <p><strong>External Moderation Physical Location : </strong>{{sample.location_other}}<p>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+      {% endif %}
+    </div>
+{% else %}
+<div class="row">
+  <div class="col-sm-10">
+    <p class="lead">This process ensures samples are retained and assessment materials are reviewed
+    </p>
+  </div>
+  <div class="col-sm-2">
+    <a class="btn btn-primary pull-right"  href="../sample/create?standard_parent={{standard.key.id()}}" role="button">Edit Sample and Assessment Checklist</a>
+  </div>
+</div>
+{% endif %}
+<hr id="verification">
+
+{% if verification_list %}
+<div class="row ">
+      <div class="col-sm-12">         
+        <h4 class="">Verification Evidence<br>
+        <small>The verification process is to ensure that the <u>teacher judgements are consistent with the standard</u>, before they are reported to NZQA. Samples of work <u>around grades boundaries should be verified</u> by a subject specialist with standard-specific knowledge. </small>
+        <div class="row">
+        <a class="btn btn-primary pull-right"  href="../verification/create?standard_parent={{standard.key.id()}}" role="button">Verify work for this Standard</a>
+        </div>
+        </h4>
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h5 class="panel-title">Student Data</h5>
+          </div>
+          <div class="panel-body">
+              <table class="table table-condensed">
+                <thead>
+                  <tr>
+                    <th><strong>Delete</strong></th>
+                    <th>Student Name</th>
+                    <th>Markers Grade</th>
+                    <th>Verifiers Grade</th>
+                    <th>Reported Grade</th>
+                    <th>Comments</th>
+                    <th><strong>Edit</strong></th>                   
+                  </tr>
+                </thead>
+                
+
+                <tbody>
+                  {% for child in verification_list %}
+                  {% if child %}
+                  <tr>
+                    {% macro cross(name) %}
+                        {% if name %}
+                          {{name}}
+                        {% else %}
+                         <i class="fa fa-times fa-lg" style="color:red"></i>
+                        {% endif %}
+                    {%- endmacro %}
+
+
+                    <td><form role="form" action="../verification/delete/{{child.key.id()}}" method="post">
+                          <input type="submit" class="btn btn-outline btn-danger btn-block btn-xs" value="Delete">
+                        </form>
+                    </td>
+                    <td>{{child.student}}</td>
+                    <td>{{cross(child.markers_grade)}}</td>
+                    <td>{{cross(child.verifiers_grade)}}</td>
+                    <td>{{cross(child.reported_grade)}}</td>
+                    <td>{{child.discussion}}</td>
+                    <td><a href="../verification/edit/{{child.key.id()}}"><i class="fa fa-pencil"></a></td>    
+                  </tr>
+                  {% endif %}
+                  {% endfor %}            
+                </tbody>
+              </table>
+          </div>
+        </div>
+      </div>
+</div>
+{% else %}
+<div class="row">
+  <div class="col-sm-10">
+    <p class="lead">
+      The verification process is to ensure that the <u>teacher judgements are consistent with the standard</u>, before they are reported to NZQA. Samples of work <u>around grades boundaries should be verified</u> by a subject specialist with standard-specific knowledge.
+    </p>
+  </div>
+  <div class="col-sm-2">
+    <a class="btn btn-primary pull-right"  href="../verification/create?standard_parent={{standard.key.id()}}" role="button">Verify work for this Standard</a>
+  </div>
+</div>
+
+{% endif %}
+    
+
+
+
+
+
+
+
+
+
+
+<!-- Modal -->
+<div id="myModal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Delete Standard</h4>
+      </div>
+      <div class="modal-body">
+        <p class="lead text-center">This not only deletes the standard data but all moderation data with this standard for the current year.</p>
+      
+          <form role="form" action="../standards/delete/{{standard.key.id()}}" method="post">
+            <input type="submit" class="btn btn-outline btn-danger btn-block" value="Delete">
+          </form>
+        
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+{% endblock %}

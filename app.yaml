@@ -1,0 +1,56 @@
+application: moderationonlinenz
+version: standard
+runtime: python27
+api_version: 1
+threadsafe: true
+
+handlers:
+- url: /static
+  static_dir: static
+
+- url: /admin/.*
+  script: main.app
+  secure: always
+  login: admin
+
+- url: /schooladmin/.*
+  script: main.app
+  secure: always
+  login: required
+
+- url: /standards/.*
+  script: main.app
+  secure: always
+  login: required
+
+- url: /verification/.*
+  script: main.app
+  secure: always
+  login: required
+
+- url: /critique/.*
+  script: main.app
+  secure: always
+  login: required
+
+- url: /sample/.*
+  script: main.app
+  secure: always
+  login: required
+
+- url: /.*
+  script: main.app
+  secure: always
+
+libraries:
+- name: webapp2
+  version: latest
+
+- name: jinja2
+  version: latest
+
+- name: lxml
+  version: latest
+
+builtins:
+- appstats: on

@@ -1,0 +1,5 @@
+cron:
+- description: 0135 Weekly Backup
+  url: /_ah/datastore_admin/backup.create?name=0135backup&kind=MetaSchool&kind=CritiqueModel&kind=SampleandReviewModel&kind=VerificationModel&kind=User&kind=Standard&kind=Staff&filesystem=gs&gs_bucket_name=backup-moderationonlinenz&namespace=0135
+  schedule: every friday 12:00
+  target: ah-builtin-python-bundle

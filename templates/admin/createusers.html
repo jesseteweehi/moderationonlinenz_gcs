@@ -1,0 +1,80 @@
+{% extends "background.html" %}
+{% block title %}Create / Delete Users{% endblock %}
+
+{% block content %}
+
+  <div class="container">
+      <form class="form-signin" role="form" method="post">
+        <h4 class="form-signin-heading text-center">
+          Add User <br>
+          <small>Only tick administrator if you want this user to have administrator rights</small>
+        </h4>
+       <div class="form-group">
+               {{form.user.label}} {{form.user(class="form-control",placeholder="Enter users email")}}
+          </div>
+        <div class="checkbox">
+              <label>
+               {{form.admin(class="checkbox")}}
+               {{form.admin.label}} 
+              </label>
+        </div>
+         <div class="checkbox">
+              <label>
+               {{form.delete(class="checkbox")}}
+               {{form.delete.label}} 
+              </label>
+        </div>
+        <div class="checkbox">
+             <label>
+               {{form.admin_delete(class="checkbox")}}
+               {{form.admin_delete.label}} 
+              </label>
+        </div>
+        <div class="checkbox">
+             <label>
+               {{form.all_delete(class="checkbox")}}
+               {{form.all_delete.label}} 
+              </label>
+        </div>
+        <!-- Change this to a button or input when using this as a form -->
+        <input type="submit" class="btn btn-outline btn-default btn-block" value="Go">
+        </form>
+
+  <div class="col-md-12">
+    <div class="col-md-3">
+      &nbsp;
+    </div>
+    <div class="col-md-6"> 
+      <h2>Users</h2>
+      <p></p>            
+      <table class="table table-condensed">
+        {% macro admin(user) %}
+          {% if user in var.admin %}
+            {{user}} <i class="fa fa-user-plus fa-lg pull-right" style="color:blue"></i>
+          {% else %}
+            {{user}} <i class="fa fa-user fa-lg pull-right" style="color:green"></i>
+          {% endif %}
+        {%- endmacro %}
+
+        <thead>
+          <tr>
+            <th>Users</th>
+          </tr>
+        </thead>
+        <tbody> 
+            {% for child in var.pleb|sort() %}
+            <tr>
+            <td>{{admin(child)}}</td>
+            </tr>        
+            {% endfor %}         
+        </tbody>
+      </table>
+     </div>
+     <div class="col-md-3">
+      &nbsp;
+    </div> 
+  </div>
+</div>
+ 
+   
+{% endblock %}

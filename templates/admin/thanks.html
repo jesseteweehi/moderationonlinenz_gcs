@@ -1,0 +1,23 @@
+{% extends "picture.html" %}
+{% block title %}Thanks{% endblock %}
+
+{% block content %}
+<div class="container">
+        <div class="row">
+            <div class="col-md-4 col-md-offset-4">
+                <div class="login-panel panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title text-center"><i class="fa fa-smile-o fa-5x"></i><br>Excellent!!</h3>
+                        
+                    </div>
+                    <div class="panel-body">
+                        <p class="text-center">Thanks for verifying our students work!!!</p>
+                        <a class="btn btn-outline btn-default btn-block" href="../{{var}}" role="button"><i class="fa-meh-oh"></i>Verify another Standard</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>  
+{% endblock %}
+
+

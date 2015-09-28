@@ -1,0 +1,169 @@
+{% extends "base.html" %}
+{% block title %}Sample and Review Process{% endblock %}
+
+{% block content %}
+    {{staff}}
+    {{students}}
+    <!-- Main jumbotron for a primary marketing message or call to action -->
+    <div class="container" style="margin-top:20px;">
+      <div class="row">
+        <div class="col-md-12">
+          <h1 class="page-header">SAMPLES ARE RETAINED & ASSESSMENT MATERIALS REVIEWED</h1>    
+         
+        <form method="POST" role="form">
+        {{form.key(value=standard_parent)}}         
+            <div class="checkbox">
+              <label>
+               {{form.check1(class="checkbox")}}
+               {{form.check1.label}} 
+              </label>
+            </div>
+            <div class="checkbox">
+              <label>
+               {{form.check2(class="checkbox")}}
+               {{form.check2.label}} 
+              </label>
+            </div> 
+            <div class="checkbox">
+              <label>
+               {{form.check3(class="checkbox")}}
+               {{form.check3.label}} 
+              </label>
+            </div> 
+            <div class="checkbox">
+              <label>
+               {{form.check4(class="checkbox")}}
+               {{form.check4.label}} 
+              </label>
+            </div> 
+            <div class="checkbox">
+              <label>
+               {{form.check5(class="checkbox")}}
+               {{form.check5.label}} 
+              </label>
+            </div> 
+     
+
+          
+           <div class="col-md-12">
+
+            <h4 class="sub-header"><u>Location of Benchmark Samples</u></h4>  
+
+          </div>
+
+          <div class="col-md-6">
+
+            <div class="form-group">
+               {{form.samples_url.label}} {{form.samples_url(class="form-control")}}
+            </div>
+               {% if form.samples_url.errors %}
+                  {% for error in form.samples_url.errors %}
+                      <div class="alert alert-danger" role="alert">{{ error }}</div>
+                  {% endfor %}
+                {% endif %}
+
+            <div class="form-group">
+               {{form.samples_other.label}} {{form.samples_other(class="form-control")}}
+          </div>
+                {% if form.samples_other.errors %}
+                  {% for error in form.samples_other.errors %}
+                      <div class="alert alert-danger" role="alert">{{ error }}</div>
+                  {% endfor %}
+                {% endif %}
+
+        </div>
+          
+          <div class="col-md-12">
+
+            <h4 class="sub-header"><u>Location of assessment materials and studentwork for external moderation</u></h4>  
+
+          </div>
+
+          <div class="col-md-6">
+
+            <div class="form-group">
+               {{form.location_url.label}} {{form.location_url(class="form-control")}}
+            </div>
+                {% if form.location_url.errors %}
+                  {% for error in form.location_url.errors %}
+                      <div class="alert alert-danger" role="alert">{{ error }}</div>
+                  {% endfor %}
+                {% endif %}
+
+            <div class="form-group">
+               {{form.location_other.label}} {{form.location_other(class="form-control")}}
+            </div>
+                {% if form.location_other.errors %}
+                  {% for error in form.location_other.errors %}
+                      <div class="alert alert-danger" role="alert">{{ error }}</div>
+                  {% endfor %}
+                {% endif %}
+
+
+            <h4 class="sub-header"><u>Teacher in Charge</u></h4>  
+
+            <div class="form-group">
+               {{form.name.label}} {{form.name(class="form-control")}}
+            </div>
+                {% if form.name.errors %}
+                  {% for error in form.name.errors %}
+                      <div class="alert alert-danger" role="alert">{{ error }}</div>
+                  {% endfor %}
+                {% endif %}
+
+            <div class="form-group">
+               {{form.school.label}} {{form.school(class="form-control")}}
+            </div>
+                {% if form.school.errors %}
+                  {% for error in form.school.errors %}
+                      <div class="alert alert-danger" role="alert">{{ error }}</div>
+                  {% endfor %}
+                {% endif %}
+
+            <button type="button" class="btn btn-info btn" data-toggle="modal" data-target="#myModal">Continue</button>
+
+            </div>
+            <div class="modal fade" id="myModal" role="dialog">
+              <div class="modal-dialog">
+    
+                <!-- Modal content-->
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Sign off</h4>
+                  </div>
+                  <div class="modal-body">
+
+                    
+                   
+                      <div class="checkbox">
+                      
+                    
+                      <label>
+                      {{form.finished(class="checkbox", data_toggle="toggle")}}
+                      {{form.finished.label}}
+                      </label>
+                       
+                      </div>
+                    
+
+                      
+                    <br>
+                      <button type="submit" class="btn btn-primary">Submit Process</button>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-default btn-sm" data-dismiss="modal">Close</button>
+                  </div>
+                </div>
+                
+              </div>
+
+            </div>
+        
+        <hr class="thick-hr">    
+        </form>        
+      </div>
+    </div>
+ 
+   
+{% endblock %}
