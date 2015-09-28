@@ -18,11 +18,11 @@
         <h1><small>{{standard.standard_type}} : </small>{{standard.standard_no}}<small> - Version</small> {{standard.version}}</h1>
       <hr>
     </div>
-    <div class="col-md-2">
+    <div class="col-md-10" style="padding-top:5px;">
       <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#myModal">Delete Standard</button>       
     </div>
-    <div class="col-md-2 pull-right">
-      <a class="btn btn-primary pull-right"  href="../standards/edit/{{standard.key.id()}}" role="button">Edit Standard</i></a>
+    <div class="col-md-2" style="padding-top:5px;">
+      <a class="btn btn-primary"  href="../standards/edit/{{standard.key.id()}}" role="button">Edit Standard</i></a>
     </div>   
   </div>
 
@@ -53,7 +53,8 @@
         </h4>
       </div>
       <div class="col-sm-2">
-          <a class="btn btn-primary btn pull-right"  href="../critique/edit/{{critique.key.id()}}" role="button">Edit critique process checklist</a>
+          <a class="btn btn-primary" href="../critique/edit/{{critique.key.id()}}" role="button">Edit critique process checklist</a>
+          <p>&nbsp;</p>
       </div>
     </div>
     <div class="row">
@@ -160,13 +161,13 @@
     </div>
 {% else %}
 <div class="row">
-  <div class="col-sm-10">
+  <div class="col-sm-8">
     <p class="lead">
       The critiquing process ensures the assessment activity meets the requirements specified in the standard and provides the opportunity for students to present evidence at all grades. Assessment materials should be checked against the current clarification of the standard, conditions of assessment and/or any external moderation feedback before use.
     </p>
   </div>
-  <div class="col-sm-2">
-    <a class="btn btn-primary pull-right"  href="../critique/create?standard_parent={{standard.key.id()}}" role="button">Edit Critique</a>
+  <div class="col-sm-4">
+    <a class="btn btn-primary"  href="../critique/create?standard_parent={{standard.key.id()}}" role="button">Edit Critique</a>
   </div>
 </div>
 {% endif %}
@@ -177,7 +178,7 @@
             <h4>SAMPLES ARE RETAINED & ASSESSMENT MATERIALS REVIEWED<br><h4>
         </div>
         <div class="col-sm-2">
-            <a class="btn btn-primary pull-right"  href="../sample/edit/{{sample.key.id()}}" role="button">Edit Sample and Assessment Checklist</a>
+            <a class="btn btn-primary" href="../sample/edit/{{sample.key.id()}}" role="button">Edit Sample and Assessment Checklist</a>
             <p>&nbsp;</p>
         </div>
     </div>
@@ -249,12 +250,12 @@
     </div>
 {% else %}
 <div class="row">
-  <div class="col-sm-10">
+  <div class="col-sm-8">
     <p class="lead">This process ensures samples are retained and assessment materials are reviewed
     </p>
   </div>
-  <div class="col-sm-2">
-    <a class="btn btn-primary pull-right"  href="../sample/create?standard_parent={{standard.key.id()}}" role="button">Edit Sample and Assessment Checklist</a>
+  <div class="col-sm-4">
+    <a class="btn btn-primary"  href="../sample/create?standard_parent={{standard.key.id()}}" role="button">Edit Sample and Assessment Checklist</a>
   </div>
 </div>
 {% endif %}
@@ -262,13 +263,18 @@
 
 {% if verification_list %}
 <div class="row ">
-      <div class="col-sm-12">         
+      <div class="col-sm-10">         
         <h4 class="">Verification Evidence<br>
         <small>The verification process is to ensure that the <u>teacher judgements are consistent with the standard</u>, before they are reported to NZQA. Samples of work <u>around grades boundaries should be verified</u> by a subject specialist with standard-specific knowledge. </small>
-        <div class="row">
-        <a class="btn btn-primary pull-right"  href="../verification/create?standard_parent={{standard.key.id()}}" role="button">Verify work for this Standard</a>
-        </div>
-        </h4>
+      </div>
+      <div class="col-sm-2"> 
+        <a class="btn btn-primary" href="../verification/create?standard_parent={{standard.key.id()}}" role="button">Verify work for this Standard</a>
+      </div> 
+       <p>&nbsp;</p>
+
+      <div class="col-sm-12">   
+    
+      
         <div class="panel panel-default">
           <div class="panel-heading">
             <h5 class="panel-title">Student Data</h5>
@@ -322,13 +328,13 @@
 </div>
 {% else %}
 <div class="row">
-  <div class="col-sm-10">
+  <div class="col-sm-8">
     <p class="lead">
       The verification process is to ensure that the <u>teacher judgements are consistent with the standard</u>, before they are reported to NZQA. Samples of work <u>around grades boundaries should be verified</u> by a subject specialist with standard-specific knowledge.
     </p>
   </div>
-  <div class="col-sm-2">
-    <a class="btn btn-primary pull-right"  href="../verification/create?standard_parent={{standard.key.id()}}" role="button">Verify work for this Standard</a>
+  <div class="col-sm-4">
+    <a class="btn btn-primary"  href="../verification/create?standard_parent={{standard.key.id()}}" role="button">Verify work for this Standard</a>
   </div>
 </div>
 
