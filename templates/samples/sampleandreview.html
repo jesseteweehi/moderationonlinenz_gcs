@@ -54,7 +54,7 @@
           <div class="col-md-6">
 
             <div class="form-group">
-               {{form.samples_url.label}} {{form.samples_url(class="form-control")}}
+               {{form.samples_url.label}} {{form.samples_url(class="form-control", placeholder="Please enter a web URL")}}
             </div>
                {% if form.samples_url.errors %}
                   {% for error in form.samples_url.errors %}
@@ -63,7 +63,7 @@
                 {% endif %}
 
             <div class="form-group">
-               {{form.samples_other.label}} {{form.samples_other(class="form-control")}}
+               {{form.samples_other.label}} {{form.samples_other(class="form-control", placeholder="if applicable please indicate physical location of files")}}
           </div>
                 {% if form.samples_other.errors %}
                   {% for error in form.samples_other.errors %}
@@ -82,7 +82,7 @@
           <div class="col-md-6">
 
             <div class="form-group">
-               {{form.location_url.label}} {{form.location_url(class="form-control")}}
+               {{form.location_url.label}} {{form.location_url(class="form-control", placeholder="Please enter a web URL")}}
             </div>
                 {% if form.location_url.errors %}
                   {% for error in form.location_url.errors %}
@@ -91,7 +91,7 @@
                 {% endif %}
 
             <div class="form-group">
-               {{form.location_other.label}} {{form.location_other(class="form-control")}}
+               {{form.location_other.label}} {{form.location_other(class="form-control", placeholder="if applicable please indicate physical location of files")}}
             </div>
                 {% if form.location_other.errors %}
                   {% for error in form.location_other.errors %}

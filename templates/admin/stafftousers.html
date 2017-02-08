@@ -1,0 +1,19 @@
+{% extends "background.html" %}
+{% block title %}Staff to Users{% endblock %}
+
+{% block content %}
+<div class="container">
+      <form class="form-signin" role="form" method="post">
+        <h4 class="form-signin-heading text-center">Create Data</h4>
+       <div class="form-group">
+               {{form.school.label}} {{form.school(class="form-control")}}
+          </div>
+        <div class="form-group">
+            {{form.year.label}} {{form.year(class="form-control")}}
+        </div>
+
+        <!-- Change this to a button or input when using this as a form -->
+        <input type="submit" class="btn btn-outline btn-default btn-block" value="Create Users">
+        </form>
+</div>
+{% endblock %}

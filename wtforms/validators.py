@@ -552,7 +552,7 @@ class PasswordCheck(object):
         self.special_characters = special_characters
         self.min = min
         if not message:
-            message = u'Must have at least one lowercase, uppercase, digit and longer than %s to be a valid password' % self.min
+            message = u'Must have at least one lowercase, uppercase, digit and %s  or longer to be a valid password' % self.min
         self.message = message
         
         

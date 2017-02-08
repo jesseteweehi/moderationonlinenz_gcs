@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block title %}Admin Downloads{% endblock %}
+
+{% block content %} 
+
+<div class="container" style="margin-top:20px;">
+  <div class="row">
+    <div class="col-sm-12">
+      <p> Download the full standard list for following Faculty </p>
+      <ul class="nav nav-pills nav-stacked">
+        {% for subject in subject_list %}
+        <li role="presentation"><a href="../schooladmin/faculty/{{subject}}">{{subject}}</a></li>
+        {% endfor %}
+    </div>
+  </div>
+
+
+{% endblock %}

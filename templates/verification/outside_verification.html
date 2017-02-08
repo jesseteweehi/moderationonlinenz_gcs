@@ -9,13 +9,16 @@
       <h1 class="page-header">VERIFICATION EVIDENCE</h1>
       <p>The verification process is to ensure that the teacher judgements are consistent with the standard, before they are reported to NZQA. Samples of work around grades boundaries should be verified by a subject specialist with standard-specific knowledge.</p>
       <hr>
-
       <form method="POST" role="form">
-        
+      
           <div class="row">
             <div class="col-md-8">
               <div class="form-group">
+                {% if selected %}
+                {{form.standard.label}} {{form.standard(class="form-control", selected=selected)}}
+                {% else %}
                 {{form.standard.label}} {{form.standard(class="form-control")}}
+                {% endif %}
               </div>
             </div>
           </div>
@@ -61,6 +64,11 @@
               <div class="form-group">
                 {{form.verifiers_grade.label}} {{form.verifiers_grade(class="form-control")}}
               </div>
+                    {% if form.verifiers_grade.errors %}
+                      {% for error in form.verifiers_grade.errors %}
+                          <div class="alert alert-danger" role="alert">{{ error }}</div>
+                      {% endfor %}
+                    {% endif %}
             </div>
           </div>
          
@@ -89,7 +97,7 @@
                 $("#finished_p").replaceWith('<p id="finished_p">PLEASE READ <br> By clicking the button to the left you are signing that you: <u><b>'+txt3+'</b></u><br> from the school <u><b>'+txt2+'</b></u><br> have verified work from student: <u><b>'+txt4+'</b></u><br> for the standard: <br><u><b>'+txt5+'</b></u><br> judging the work to have the grade: <br><u><b>'+txt6+'</b></u></p>');
               }
               else {
-                $("#finished_p").replaceWith('<p id="finished_p">You are required to enter data for <u><b>"Student Name"</b></u> and <u><b>"Teacher Name (Verifier)</b></u>"<br><small>Close this window an re-enter values in these fields</small></p>');
+                $("#finished_p").replaceWith('<p id="finished_p">You are required to enter data for <u><b>"Student Name"</b></u> and <u><b>"Teacher Name (Verifier)</b></u>"<br><small>Close this window and re-enter values in these fields</small></p>');
               }  
             }
           </script>

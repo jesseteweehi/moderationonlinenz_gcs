@@ -29,13 +29,17 @@
         <script src="https://gitcdn.github.io/bootstrap-toggle/2.2.0/js/bootstrap-toggle.min.js"></script>
 
         <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+
+        <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+
+        
         
     </head>
     <body>
         <!--[if lt IE 8]>
             <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
         <![endif]-->
-     <div class="navbar-inverse yamm navbar-default navbar-fixed-top">
+     <div class="navbar-inverse yamm navbar-default navbar-fixed-top hidden-print">
       <div class="container">
         <div class="navbar-header">
           <button type="button" data-toggle="collapse" data-target="#navbar-collapse-1" class="navbar-toggle"><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></button><a href="/" class="navbar-brand">Internal Moderation</a>
@@ -43,16 +47,30 @@
         <div id="navbar-collapse-1" class="navbar-collapse collapse">
           <ul class="nav navbar-nav navbar-right">
             <!-- Classic dropdown -->
-            <!-- <li class="dropdown"><a href="#" data-toggle="dropdown" class="dropdown-toggle">Standards<b class="caret"></b></a>
+   <!--          <li class><a href="/help">Help</a></li> -->
+            {% if admin %}
+            <li class="dropdown"><a href="#" data-toggle="dropdown" class="dropdown-toggle">Menu<b class="caret"></b></a>
               <ul role="menu" class="dropdown-menu">
-                <li><a tabindex="-1" href="/"> Verify a Standard</a></li>
-                <li><a tabindex="-1" href="/standards"> Standards </a></li>
+                <li class="dropdown-header">Admin Create</li>
+                <li><a tabindex="-1" href="/standards/create">Create Standard</a></li>
+           
                 <li class="divider"></li>
-                <li><a tabindex="-1" href="/standards/create"> Create a Standard</a></li>
-         <!--        <li class="divider"></li>
-                <li><a tabindex="-1" href="/download"> Download Standards CSV</a></li>
+                <li class="dropdown-header">Admin Data</li>
+                 <li><a tabindex="-1" href="/schooladmin/data"> Progress Data </a></li>
+                <li><a tabindex="-1" href="//standards/2017"> Data 2017 </a></li>
+                <li><a tabindex="-1" href="/standards/2016"> Data 2016 </a></li>
+                <li><a tabindex="-1" href="/standardsall"> All Data (Every Year) </a></li>
+
+                <li class="divider"></li>
+                <li class="dropdown-header">Admin</li>
+                <li><a tabindex="-1" href="/staff/create">Create Staff</a></li>
+                <li><a tabindex="-1" href="/staff/delete">Delete Staff</a></li>
+                <li><a tabindex="-1" href="/schooladmin/user">Add or Delete Users</a></li>
+                <li><a tabindex="-1" href="/schooladmin/pass">Change School Password</a></li>
+                <li><a tabindex="-1" href="/schooladmin/vpass">Change School Code</a></li>
               </ul>
-            </li> --> -->
+            </li>
+            {% endif %}
             <li class><a href="/logout">Logout</a></li>
           </ul>
         </div>
@@ -70,12 +88,14 @@
         <script>window.jQuery || document.write('<script src="js/vendor/jquery-1.11.2.min.js"><\/script>')</script>
 
        
-
+        {% block script %}{% endblock %}
 
 
         <script src="/static/js/vendor/bootstrap.min.js"></script>
 
         <script src="/static/js/main.js"></script>
+
+        
 
         <!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->
         <script>
@@ -84,7 +104,7 @@
             e=o.createElement(i);r=o.getElementsByTagName(i)[0];
             e.src='//www.google-analytics.com/analytics.js';
             r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));
-            ga('create','UA-XXXXX-X','auto');ga('send','pageview');
+            ga('create','UA-73955180-1','auto');ga('send','pageview');
         </script>
     </body>
 </html>

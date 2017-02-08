@@ -9,7 +9,7 @@ MAX_LENGTH = 50
 MAIN_ERROR = ''
 NO_INPUT_ERROR = 'Please enter information'
 
-YEARS = [('2015','2015'),('2016','2016'),('2017','2017')]
+YEARS = [('2016','2016'),('2017','2017')]
 GRADES = [('No Grade','No Grade'),('Not Achieved','Not Achieved'),('Achieved','Achieved'),('Achieved with Merit','Achieved with Merit'),('Achieved with Excellence','Achieved with Excellence')]
 
 ############# Data #############
@@ -28,17 +28,76 @@ class AllSchoolsData(SelectField):
 
 class AllStandardsData(SelectField):
 
+	@classmethod
+	def current_time(self):
+		return str(datetime.datetime.now().year)
+
 	def __init__(self, *args, **kwargs):
 		super(AllStandardsData, self).__init__(*args, **kwargs)
 		self.choices = []
 		standards = m.Standard.query()
+		standards = standards.filter(m.Standard.year == self.current_time())
 		standards = standards.order(m.Standard.subject_title)
 		standards = standards.order(m.Standard.subject_id)
 		standards = standards.order(m.Standard.standard_no)
 		for child in standards:
-			self.choices.append((str(child.key.id()),child.subject_id+" | "+child.standard_no+" | "+child.title)) 
+			self.choices.append((str(child.key.id()),child.subject_id +" | "+child.standard_no+" | "+child.title)) 
 
 class AllStaffData(SelectField):
+
+	@classmethod
+	def uniq(self, i):
+		output = []
+		for x in i:
+			if x not in output:
+				output.append(x)
+		return output
+
+	@classmethod
+	def truncate(self, s):
+		if len(s) > 12:
+			s = s.split()
+			s = self.uniq(s)
+			s = [word.replace('Teacher', 'Tchr').replace('Department', 'Dept').replace('Faculty', 'Fclty').replace('Management', 'Mgmt').replace('Head','Hd') for word in s]			
+			s = " ".join(s)
+		info = (s[:20] + '...') if len(s) > 22 else s
+		return info
+
+	@classmethod
+	def current_time(self):
+		return str(datetime.datetime.now().year)
+
+	def __init__(self, *args, **kwargs):
+		super(AllStaffData, self).__init__(*args, **kwargs)
+		self.choices = []
+		staff = m.Staff.query()
+		staff = staff.filter(m.Staff.year == self.current_time())
+		staff = staff.order(m.Staff.subject)
+		staff = staff.order(m.Staff.last_name)
+		# staff = staff.order(m.Staff.standard_no)
+		for child in staff:
+			self.choices.append((self.truncate(child.subject)+" - "+child.last_name+" "+child.first_name+" | "+child.staff_id,
+				                 self.truncate(child.subject)+" - "+child.last_name+" "+child.first_name+" | "+child.staff_id))
+
+class AllStaffDataAdmin(SelectField):
+
+	@classmethod
+	def uniq(self, i):
+		output = []
+		for x in i:
+			if x not in output:
+				output.append(x)
+		return output
+
+	@classmethod
+	def truncate(self, s):
+		if len(s) > 12:
+			s = s.split()
+			s = self.uniq(s)
+			s = [word.replace('Teacher', 'Tchr').replace('Department', 'Dept').replace('Faculty', 'Fclty').replace('Management', 'Mgmt').replace('Head','Hd') for word in s]			
+			s = " ".join(s)
+		info = (s[:20] + '...') if len(s) > 22 else s
+		return info
 
 	def __init__(self, *args, **kwargs):
 		super(AllStaffData, self).__init__(*args, **kwargs)
@@ -48,10 +107,15 @@ class AllStaffData(SelectField):
 		staff = staff.order(m.Staff.last_name)
 		# staff = staff.order(m.Staff.standard_no)
 		for child in staff:
-			self.choices.append((child.subject+" - "+child.last_name+" "+child.first_name+" | "+child.staff_id,
-				                 child.subject+" - "+child.last_name+" "+child.first_name+" | "+child.staff_id))
+			self.choices.append((child.year+ "|" +self.truncate(child.subject)+" - "+child.last_name+" "+child.first_name+" | "+child.staff_id,
+				                 child.year+ "|" +self.truncate(child.subject)++" - "+child.last_name+" "+child.first_name+" | "+child.staff_id))
 
 class AllStaffDataDelete(SelectMultipleField):
+
+	@classmethod
+	def current_time(self):
+		return str(datetime.datetime.now().year)
+
 	"""
 	Create URL Safe key
 	"""
@@ -60,6 +124,7 @@ class AllStaffDataDelete(SelectMultipleField):
 		super(AllStaffDataDelete, self).__init__(*args, **kwargs)
 		self.choices = []
 		staff = m.Staff.query()
+		staff = staff.filter(m.Staff.year == self.current_time())
 		staff = staff.order(m.Staff.subject)
 		staff = staff.order(m.Staff.last_name)
 		# staff = staff.order(m.Staff.standard_no)
@@ -96,8 +161,11 @@ class MetaCreateForm(Form):
 class AdminStandardCreate(Form):
 	school  = AllSchoolsData(u'Choose School', widget=Select())
 	year = SelectField(u'Year', widget=Select(), choices=YEARS)
-	filename = StringField(u'Cloud Storage Filename', widget=TextInput())
+	filename = StringField(u'Cloud Storage Filename or Filename', widget=TextInput())
 
+class StaffToUsersForm(Form):
+	school  = AllSchoolsData(u'Choose School', widget=Select())
+	year = SelectField(u'Year', widget=Select(), choices=YEARS)
 
 ############ EDIT OVERALL STANDARDS ###########
 
@@ -106,7 +174,7 @@ class StandardCreateForm(Form):
 
 	verification_total = IntegerField(u'No of Student Entries', widget=TextInput(), validators=[validators.optional()])
 	subject_id = StringField(u'Subject ID e.g MUS1', widget=TextInput(), validators=[validators.input_required(message=NO_INPUT_ERROR),validators.length(max=MAX_LENGTH)])
-	subject_title = StringField(u'Subject Title e.g Music', widget=TextInput(), validators=[validators.input_required(message=NO_INPUT_ERROR),validators.length(max=MAX_LENGTH)])
+	subject_title = StringField(u'Faculty Umbrella e.g Arts', widget=TextInput(), validators=[validators.input_required(message=NO_INPUT_ERROR),validators.length(max=MAX_LENGTH)])
 
 	standard_no = StringField(u'Standard Number', widget=TextInput(), validators=[validators.input_required(message=NO_INPUT_ERROR),validators.length(max=MAX_LENGTH)])
 	version = StringField(u'Version of the Standard', widget=TextInput(), validators=[validators.input_required(message=NO_INPUT_ERROR),validators.length(max=MAX_LENGTH)])
@@ -149,17 +217,17 @@ class Crit(Hidden):
 class SampleandReviewForm(Hidden):
 	name = StringField(u'Name', widget=TextInput(), validators=[validators.input_required(message=NO_INPUT_ERROR), validators.length(max=MAX_LENGTH)])
 	school = StringField(u'School', widget=TextInput(), validators=[validators.input_required(message=NO_INPUT_ERROR), validators.length(max=MAX_LENGTH)])
-	check1 = BooleanField(u"The School's random selection procedure has been applied to select work for external moderation, if required.", widget=CheckboxInput())
+	check1 = BooleanField(u"The school's random selection procedure has been applied to select work for external moderation, if required.", widget=CheckboxInput())
 	check2 = BooleanField(u'Assessment materials have been reviewed in response to the assessor and/or verifier feedback.', widget=CheckboxInput())
 	check3 = BooleanField(u'New benchmark samples have been annotated and/or existing examples of grade boundary decisions have been updated.', widget=CheckboxInput())
 	check4 = BooleanField(u'Assessment materials and student work are available for external moderation at (indicate file path or location):', widget=CheckboxInput())
 	check5 = BooleanField(u'Reviewed assessment materials are ready for future use.', widget=CheckboxInput())
 
-	samples_url = StringField(u'URL Location of Benchmark sample fsiles <br><small>Please enter a web page url</small>', widget=TextInput(), validators=[validators.URL(),validators.optional()])
-	samples_other = StringField(u'Benchmark Sample files location <br><small>if applicable please indicate physical location of files</small>', widget=TextInput(), validators=[validators.length(max=MAX_LENGTH)])
+	samples_url = StringField(u'URL Location of Benchmark sample files', widget=TextInput(), validators=[validators.URL(),validators.optional()])
+	samples_other = StringField(u'Benchmark Sample files location', widget=TextInput(), validators=[validators.length(max=MAX_LENGTH)])
 
-	location_url = StringField(u'URL Location of external moderation files <br><small>Please enter a web page url</small>', widget=TextInput(), validators=[validators.URL(),validators.optional()])
-	location_other = StringField(u'External Moderation files location <br><small>if applicable please indicate physical location of files</small>', widget=TextInput(), validators=[validators.length(max=MAX_LENGTH)])
+	location_url = StringField(u'URL Location of external moderation files', widget=TextInput(), validators=[validators.URL(),validators.optional()])
+	location_other = StringField(u'External Moderation files location', widget=TextInput(), validators=[validators.length(max=MAX_LENGTH)])
 
 	finished = BooleanField(u"""
 		By clicking the button to the left you are signing that <b>you</b> have finished the <b><u>sample and review</u></b> process. 
@@ -175,7 +243,7 @@ class OutsideVerificationForm(Form):
 	verifier_name = StringField(u'Teacher name (Verifier)', widget=TextInput(), validators=[validators.input_required(message=NO_INPUT_ERROR)])
 	verifier_school = StringField(u'School of Verifier', widget=TextInput())
 
-	verifiers_grade = SelectField(u'Assessment judgement', widget=Select(), choices=GRADES)
+	verifiers_grade = SelectField(u'Assessment judgement', widget=Select(), choices=GRADES, validators=[validators.NoneOf(values='No Grade',message='Please enter appropriate grade')])
 
 	discussion = StringField(u'Discussion', widget=TextArea())
 
@@ -188,12 +256,12 @@ class VerificationForm(Form):
 	verifier_name = StringField(u'Teacher name (Verifier)', widget=TextInput(),validators=[validators.input_required(message=NO_INPUT_ERROR), validators.length(max=MAX_LENGTH)])
 	verifier_school = StringField(u'School of Verifier', widget=TextInput())
 	verifier_school_other = StringField(u'Other - School of Verifier', widget=TextInput())
-	verifiers_grade = StringField(u'Assessment judgement', widget=TextInput())
+	verifiers_grade = StringField(u'Assessment judgement of Verifier', widget=TextInput())
 
 	markers_grade = SelectField(u'Markers assessment judgement', widget=Select(), choices=GRADES)
-	reported_grade = SelectField(u'Reported assessment judegement', widget=Select(), choices=GRADES)
+	reported_grade = SelectField(u'Reported assessment judgement', widget=Select(), choices=GRADES)
 
-	# tic = AllStaffData(u'Teacher in Charge', widget=Select())
+	tic = AllStaffData(u'Teacher in Charge', widget=Select())
 
 	discussion = StringField(u'Discussion', widget=TextArea())
 
@@ -202,12 +270,12 @@ class VerificationForm(Form):
 
 class InsideVerificationForm(Form):
 	standard = StringField(u'Standard', widget=HiddenInput())
-	student = StringField(u'Student Name', widget=TextInput(),validators=[validators.input_required(message=NO_INPUT_ERROR)])
+	student = StringField(u'Student Name (Full Name)', widget=TextInput(),validators=[validators.input_required(message=NO_INPUT_ERROR)])
 	
-	verifier_name = StringField(u'Teacher name', widget=TextInput(),validators=[validators.input_required(message=NO_INPUT_ERROR)])
+	verifier_name = StringField(u'Teacher name (Verifier)', widget=TextInput(),validators=[validators.input_required(message=NO_INPUT_ERROR)])
 	verifier_school = StringField(u'School of Verifier', widget=TextInput())
 	verifier_school_other = StringField(u'Other - School of Verifier', widget=TextInput())
-	verifiers_grade = SelectField(u'Assessment judgement', widget=Select(), choices=GRADES, validators=[validators.NoneOf(values='No Grade',message='Please enter appropriate grade')])
+	verifiers_grade = SelectField(u'Assessment Judgement of Verifier', widget=Select(), choices=GRADES, validators=[validators.NoneOf(values='No Grade',message='Please enter appropriate grade')])
 
 	markers_grade = SelectField(u'Markers assessment judgement', widget=Select(), choices=GRADES,validators=[validators.optional()])
 	reported_grade = SelectField(u'Reported assessment judegement', widget=Select(), choices=GRADES,validators=[validators.optional()])
@@ -238,15 +306,15 @@ class UsersCreateForm(Form):
 	Organise users
 	"""
 	user = StringField('Add / Delete  User',widget=TextInput(), validators=[validators.Email(),validators.optional()])
-	admin = BooleanField('Administrator',widget=CheckboxInput())
-	delete = BooleanField('Check if you want to Delete User',widget=CheckboxInput())
-	admin_delete = BooleanField('Remove Admin Rights',widget=CheckboxInput())
-	all_delete = BooleanField('Start Again',widget=CheckboxInput())
+	admin = BooleanField('Assign as Administrator',widget=CheckboxInput())
+	delete = BooleanField('Delete User',widget=CheckboxInput())
+	admin_delete = BooleanField('Retract Admin Rights',widget=CheckboxInput())
+	all_delete = BooleanField('DELETE ALL USERS - CLICK AT YOUR PERIL',widget=CheckboxInput())
 
 
 class CreateStaffForm(Form):
 	year = SelectField(u'Year', widget=Select(), choices=YEARS)
-	staff_id = StringField(u'staff_id', widget=TextInput(), validators=[validators.input_required()])
+	staff_id = StringField(u'Staff Identifier', widget=TextInput(), validators=[validators.input_required()])
 	first_name = StringField(u'First Name', widget=TextInput(), validators=[validators.input_required()])
 	last_name = StringField(u'Last Name', widget=TextInput(), validators=[validators.input_required()])
 	title = SelectField(u'Title', widget=Select(), choices=(('Mr','Mr'),('Mrs','Mrs'),('Miss','Miss'),('Ms','Ms')))
@@ -254,7 +322,7 @@ class CreateStaffForm(Form):
 	email = StringField(u'Email', widget=TextInput(), validators=[validators.Email()])
 
 class DeleteStaffForm(Form):
-	member = AllStaffDataDelete(u'Delete Staff')
+	member = AllStaffDataDelete(u'Click on One or More Staff to Delete')
 
 
 

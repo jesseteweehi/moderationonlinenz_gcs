@@ -1,4 +1,4 @@
-{% extends "background.html" %}
+{% extends "background2.html" %}
 {% block title %}Create / Delete Users{% endblock %}
 
 {% block content %}
@@ -11,8 +11,12 @@
       &nbsp;
     </div>
     <div class="col-md-6"> 
-      <h2>Users</h2>
-      <p></p>  
+      <h2>Delete Staff</h2>
+      <p><strong> This will <mark><em>delete staff</em></mark> from the staff list. This list contains the names of staff who can be assigned as "Teacher in Charge" of either standard or verification data.</strong></p>
+
+      <p><small>Note this does not delete the user from their ability to sign in to the website</small></p> 
+
+
       <form method="POST" role="form">          
      
           <div class="form-group">

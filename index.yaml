@@ -15,6 +15,12 @@ indexes:
   - name: subject
   - name: last_name
 
+- kind: Staff
+  properties:
+  - name: year
+  - name: subject
+  - name: last_name
+
 - kind: Standard
   properties:
   - name: critique_finished
@@ -105,6 +111,13 @@ indexes:
 - kind: Standard
   properties:
   - name: subject_title
+  - name: subject_id
+  - name: standard_no
+  - name: year
+
+- kind: Standard
+  properties:
+  - name: subject_title
   - name: verification_finished
 
 - kind: Standard
@@ -122,12 +135,74 @@ indexes:
 
 - kind: Standard
   properties:
+  - name: subject_title
+  - name: year
+  - name: critique_finished
+  - name: subject_id
+  - name: standard_no
+
+- kind: Standard
+  properties:
+  - name: subject_title
+  - name: year
+  - name: sample_finished
+  - name: subject_id
+  - name: standard_no
+
+- kind: Standard
+  properties:
+  - name: subject_title
+  - name: year
+  - name: subject_id
+  - name: standard_no
+
+- kind: Standard
+  properties:
+  - name: subject_title
+  - name: year
   - name: verification_finished
   - name: subject_id
   - name: standard_no
 
 - kind: Standard
   properties:
+  - name: verification_finished
+  - name: subject_id
+  - name: standard_no
+
+- kind: Standard
+  properties:
+  - name: verification_finished
+  - name: subject_title
+  - name: subject_id
+  - name: standard_no
+
+- kind: Standard
+  properties:
+  - name: year
+  - name: critique_finished
+  - name: subject_title
+  - name: subject_id
+  - name: standard_no
+
+- kind: Standard
+  properties:
+  - name: year
+  - name: sample_finished
+  - name: subject_title
+  - name: subject_id
+  - name: standard_no
+
+- kind: Standard
+  properties:
+  - name: year
+  - name: subject_title
+  - name: subject_id
+  - name: standard_no
+
+- kind: Standard
+  properties:
+  - name: year
   - name: verification_finished
   - name: subject_title
   - name: subject_id

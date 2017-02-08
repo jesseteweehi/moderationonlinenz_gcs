@@ -6,7 +6,7 @@
 <div class="container">
 
   <div class="row" id="standard" style="margin-top:10px;">
-    <div class="col-md-12">
+    <div class="col-md-12 hidden-print">
        {% if before %}
        <p class="pull-left"><a href="../standards/{{before}}"><i class="fa fa-angle-double-left"></i> Standard Before</a></p>
        {% endif %}
@@ -18,10 +18,10 @@
         <h1><small>{{standard.standard_type}} : </small>{{standard.standard_no}}<small> - Version</small> {{standard.version}}</h1>
       <hr>
     </div>
-    <div class="col-md-10" style="padding-top:5px;">
+    <div class="col-md-10 hidden-print" style="padding-top:5px;">
       <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#myModal">Delete Standard</button>       
     </div>
-    <div class="col-md-2" style="padding-top:5px;">
+    <div class="col-md-2 hidden-print" style="padding-top:5px;">
       <a class="btn btn-primary"  href="../standards/edit/{{standard.key.id()}}" role="button">Edit Standard</i></a>
     </div>   
   </div>
@@ -49,10 +49,10 @@
     <div class="row ">
       <div class="col-sm-10">         
         <h4 class="">CRITIQUING ASSESSMENT MATERIALS<br>
-        <small>The critiquing process ensures the assessment activity <u>meets the requirements</u> specified in the standard and provides the <u>opportunity for students to present evidence at all grades</u>. Assessment materials should be <u>checked against</u> the current <em><u>clarification of the standard, conditions of assessment</em></u> and/or any <em><u>external moderation feedback</u></em> before use.</small>
+        <small class="hidden-print">The critiquing process ensures the assessment activity <u>meets the requirements</u> specified in the standard and provides the <u>opportunity for students to present evidence at all grades</u>. Assessment materials should be <u>checked against</u> the current <em><u>clarification of the standard, conditions of assessment</em></u> and/or any <em><u>external moderation feedback</u></em> before use.</small>
         </h4>
       </div>
-      <div class="col-sm-2">
+      <div class="col-sm-2 hidden-print">
           <a class="btn btn-primary" href="../critique/edit/{{critique.key.id()}}" role="button">Edit critique process checklist</a>
           <p>&nbsp;</p>
       </div>
@@ -160,7 +160,7 @@
         </div>
     </div>
 {% else %}
-<div class="row">
+<div class="row hidden-print">
   <div class="col-sm-8">
     <p class="lead">
       The critiquing process ensures the assessment activity meets the requirements specified in the standard and provides the opportunity for students to present evidence at all grades. Assessment materials should be checked against the current clarification of the standard, conditions of assessment and/or any external moderation feedback before use.
@@ -177,7 +177,7 @@
       <div class="col-sm-10">
             <h4>SAMPLES ARE RETAINED & ASSESSMENT MATERIALS REVIEWED<br><h4>
         </div>
-        <div class="col-sm-2">
+        <div class="col-sm-2 hidden-print">
             <a class="btn btn-primary" href="../sample/edit/{{sample.key.id()}}" role="button">Edit Sample and Assessment Checklist</a>
             <p>&nbsp;</p>
         </div>
@@ -249,7 +249,7 @@
       {% endif %}
     </div>
 {% else %}
-<div class="row">
+<div class="row hidden-print">
   <div class="col-sm-8">
     <p class="lead">This process ensures samples are retained and assessment materials are reviewed
     </p>
@@ -265,9 +265,9 @@
 <div class="row ">
       <div class="col-sm-10">         
         <h4 class="">Verification Evidence<br>
-        <small>The verification process is to ensure that the <u>teacher judgements are consistent with the standard</u>, before they are reported to NZQA. Samples of work <u>around grades boundaries should be verified</u> by a subject specialist with standard-specific knowledge. </small>
+        <small class="hidden-print">The verification process is to ensure that the <u>teacher judgements are consistent with the standard</u>, before they are reported to NZQA. Samples of work <u>around grades boundaries should be verified</u> by a subject specialist with standard-specific knowledge. </small>
       </div>
-      <div class="col-sm-2"> 
+      <div class="col-sm-2 hidden-print"> 
         <a class="btn btn-primary" href="../verification/create?standard_parent={{standard.key.id()}}" role="button">Verify work for this Standard</a>
       </div> 
        <p>&nbsp;</p>
@@ -283,13 +283,13 @@
               <table class="table table-condensed">
                 <thead>
                   <tr>
-                    <th><strong>Delete</strong></th>
+                    <th class="hidden-print"><strong>Delete</strong></th>
                     <th>Student Name</th>
                     <th>Markers Grade</th>
                     <th>Verifiers Grade</th>
                     <th>Reported Grade</th>
                     <th>Comments</th>
-                    <th><strong>Edit</strong></th>                   
+                    <th class="hidden-print"><strong>Edit</strong></th>                   
                   </tr>
                 </thead>
                 
@@ -307,7 +307,7 @@
                     {%- endmacro %}
 
 
-                    <td><form role="form" action="../verification/delete/{{child.key.id()}}" method="post">
+                    <td class="hidden-print"><form role="form" action="../verification/delete/{{child.key.id()}}" method="post">
                           <input type="submit" class="btn btn-outline btn-danger btn-block btn-xs" value="Delete">
                         </form>
                     </td>
@@ -316,7 +316,7 @@
                     <td>{{cross(child.verifiers_grade)}}</td>
                     <td>{{cross(child.reported_grade)}}</td>
                     <td>{{child.discussion}}</td>
-                    <td><a href="../verification/edit/{{child.key.id()}}"><i class="fa fa-pencil"></a></td>    
+                    <td class="hidden-print"><a href="../verification/edit/{{child.key.id()}}"><i class="fa fa-pencil"></a></td>    
                   </tr>
                   {% endif %}
                   {% endfor %}            
@@ -327,7 +327,7 @@
       </div>
 </div>
 {% else %}
-<div class="row">
+<div class="row hidden-print">
   <div class="col-sm-8">
     <p class="lead">
       The verification process is to ensure that the <u>teacher judgements are consistent with the standard</u>, before they are reported to NZQA. Samples of work <u>around grades boundaries should be verified</u> by a subject specialist with standard-specific knowledge.

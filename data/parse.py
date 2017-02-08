@@ -18,7 +18,7 @@ def pretty(d, indent=0):
     if type(d) is str:
         print str(d.decode('utf-8'))
 
-def open_file(filename):
+def open_file_gcs(filename):
     l = []
     # script_dir = os.path.dirname(__file__)
     # rel_path = school+"/"+year+"/"
@@ -27,6 +27,17 @@ def open_file(filename):
     for row in spamreader:
         l.append(row)
     filename.close()
+    return l
+
+def open_file(school,year,filename):
+    l = []
+    script_dir = os.path.dirname(__file__)
+    rel_path = school+"/"+year+"/"
+    abs_file_path = os.path.join(script_dir, rel_path)
+    with open(abs_file_path+filename, 'rU') as csvfile:
+        spamreader = csv.reader(csvfile)
+        for row in spamreader:
+            l.append(row)
     return l
 
 def subject(string,csv_l):

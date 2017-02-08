@@ -3,6 +3,12 @@ import random
 import hashlib
 import hmac
 from string import letters
+import datetime
+
+import operator
+import itertools
+import collections
+
 from google.appengine.ext import ndb
 from google.appengine.api import memcache
 
@@ -162,7 +168,6 @@ class User(ndb.Model):
 		if u and valid_pw(name, code, u.outside_hash):
 			return u
 
-
 def check_before(l,before,cursor):
 	if cursor == 0:
 		return None
@@ -171,7 +176,6 @@ def check_before(l,before,cursor):
 			return check_before(l,l[cursor-1],cursor-1)
 		else:
 			return before
-
 
 def check_after(l,after,cursor):
 	if cursor == len(l)-1:
@@ -186,7 +190,6 @@ def before_after(n):
 	before = n - 1
 	after = n + 1
 	return before,after
-
 
 def cursor_find(l,cursor):
 	if len(l) > 2:
@@ -244,6 +247,96 @@ class Standard(ndb.Model):
 	tic = ndb.StringProperty()
 
 	@classmethod
+	def current_time(self):
+		return str(datetime.datetime.now().year)
+
+	@classmethod
+	def percentage_entries(self, l):
+		new_list = list(l)
+		n = 0
+		for item in new_list:
+			if item == True:
+				n = n + 1
+		return n,len(l), (n)/float(len(l))*100
+
+	@classmethod
+	def rank_unique(self,l,num):
+		"""takes a list and finds the number of items that are the sam. and then ranks them on how many times th
+		they have been entered.
+		num == down how many you want e.g 5 will give you the top 5"""
+		d = {}
+		new_list = list(l)
+		while len(new_list) > 0:
+			var = new_list.pop()
+			if var in d:
+				d[var] += 1
+			else:
+				d[var] = 1
+		sorted(d.items(), key=lambda x: x[1])
+		itertools.islice(d.items(),1,num)
+		return d
+
+	@classmethod
+	def create_users_data(self):
+		standards = Standard.query()
+		standards = standards.filter(Standard.year == self.current_time())
+		critique_email = list()
+		sample_email = list()
+		for standard in standards:
+			critique_email.append(standard.critique_email)
+			sample_email.append(standard.sample_email)
+		return critique_email, sample_email
+
+	@classmethod
+	def retrieve_users_data(self):
+		critique_email_list, sample_email_list = self.create_users_data()
+		top_5_critique_email = self.rank_unique(critique_email_list, 5)
+		top_5_sample_email = self.rank_unique(sample_email_list, 5)
+		return top_5_critique_email, top_5_sample_email
+
+
+	@classmethod
+	def create_data(self, subject=False):
+		standards = Standard.query()
+		standards = standards.filter(Standard.year == self.current_time())
+		if subject:
+			standards = standards.filter(Standard.subject_title == subject)
+			critique_data = list()
+			sample_data = list()
+			verification_data = list()
+			for standard in standards:
+				critique_data.append(standard.critique_finished)
+				sample_data.append(standard.sample_finished)
+				if standard.verification_finished > 0:
+					verification_data.append(True)
+				else:
+					verification_data.append(False)
+			return subject, critique_data, sample_data, verification_data
+		else:
+			critique_data = list()
+			sample_data = list()
+			verification_data = list()
+			for standard in standards:
+				critique_data.append(standard.critique_finished)
+				sample_data.append(standard.sample_finished)
+				if standard.verification_finished > 0:
+					verification_data.append(True)
+				else:
+					verification_data.append(False)
+			return critique_data, sample_data, verification_data
+
+	@classmethod
+	def retrieve_data(self):
+		data = dict()
+		for subject in self.subject_list():
+			subject, critique_data, sample_data, verification_data = self.create_data(subject)
+			data[subject] = {}
+			data[subject]['critique_data'] = self.percentage_entries(critique_data)
+			data[subject]['sample_data'] = self.percentage_entries(sample_data)
+			data[subject]['verification_data'] = self.percentage_entries(verification_data)
+		return data
+
+	@classmethod
 	def standard_shuffle(self, key):
 		keys_list = self.get_default_filter()
 		if key in keys_list:
@@ -274,7 +367,8 @@ class Standard(ndb.Model):
 	@classmethod
 	def default_filter(self):
 		full = []
-		standards=Standard.query()		
+		standards=Standard.query()
+		standards = standards.filter(Standard.year == self.current_time())		
 		standards = standards.order(Standard.subject_title)
 		standards = standards.order(Standard.subject_id)
 		standards = standards.order(Standard.standard_no)
@@ -298,18 +392,30 @@ class Standard(ndb.Model):
 		memcache.set('standard_shuffle', data, 300)
 				
 	@classmethod
-	def default_filter_page(self, cursor):
-		standards=Standard.query()		
+	def default_filter_page(self, cursor, year=str(datetime.datetime.now().year)):
+		standards=Standard.query()
+		standards = standards.filter(Standard.year == year)		
 		standards = standards.order(Standard.subject_title)
 		standards = standards.order(Standard.subject_id)
 		standards = standards.order(Standard.standard_no)
 		results, new_cursor, more = standards.fetch_page(100, start_cursor=cursor)
 		return results, new_cursor, more
 
+	@classmethod
+	def admin_default_filter_page(self, cursor):
+		standards=Standard.query()		
+		standards = standards.order(Standard.subject_title)
+		standards = standards.order(Standard.subject_id)
+		standards = standards.order(Standard.standard_no)
+		standards = standards.order(Standard.year)
+		results, new_cursor, more = standards.fetch_page(100, start_cursor=cursor)
+		return results, new_cursor, more
+
 
 	@classmethod
-	def default_order_by_critique(self,cursor):
+	def default_order_by_critique(self,cursor, year=str(datetime.datetime.now().year)):
 		standards=Standard.query()
+		standards = standards.filter(Standard.year == year)	
 		standards = standards.order(Standard.critique_finished)
 		standards = standards.order(Standard.subject_title)
 		standards = standards.order(Standard.subject_id)	
@@ -317,10 +423,21 @@ class Standard(ndb.Model):
 		results, new_cursor, more = standards.fetch_page(100, start_cursor=cursor)
 		return results, new_cursor, more
 
+	# @classmethod
+	# def admin_default_order_by_critique(self,cursor):
+	# 	standards=Standard.query()
+	# 	standards = standards.order(Standard.critique_finished)
+	# 	standards = standards.order(Standard.subject_title)
+	# 	standards = standards.order(Standard.subject_id)	
+	# 	standards = standards.order(Standard.standard_no)
+	# 	results, new_cursor, more = standards.fetch_page(100, start_cursor=cursor)
+	# 	return results, new_cursor, more
+
 
 	@classmethod
-	def default_order_by_sample(self,cursor):
+	def default_order_by_sample(self,cursor, year=str(datetime.datetime.now().year)):
 		standards=Standard.query()
+		standards = standards.filter(Standard.year == year)	
 		standards = standards.order(Standard.sample_finished)
 		standards = standards.order(Standard.subject_title)
 		standards = standards.order(Standard.subject_id)	
@@ -328,9 +445,20 @@ class Standard(ndb.Model):
 		results, new_cursor, more = standards.fetch_page(100, start_cursor=cursor)
 		return results, new_cursor, more
 
+	# @classmethod
+	# def admin_default_order_by_sample(self,cursor):
+	# 	standards=Standard.query()
+	# 	standards = standards.order(Standard.sample_finished)
+	# 	standards = standards.order(Standard.subject_title)
+	# 	standards = standards.order(Standard.subject_id)	
+	# 	standards = standards.order(Standard.standard_no)
+	# 	results, new_cursor, more = standards.fetch_page(100, start_cursor=cursor)
+	# 	return results, new_cursor, more
+
 	@classmethod
-	def default_order_by_verification_finished(self,cursor):
+	def default_order_by_verification_finished(self,cursor, year=str(datetime.datetime.now().year)):
 		standards=Standard.query()
+		standards = standards.filter(Standard.year == year)	
 		standards = standards.order(Standard.verification_finished)
 		standards = standards.order(Standard.subject_title)
 		standards = standards.order(Standard.subject_id)	
@@ -338,9 +466,20 @@ class Standard(ndb.Model):
 		results, new_cursor, more = standards.fetch_page(100, start_cursor=cursor)
 		return results, new_cursor, more
 
+	# @classmethod
+	# def admin_default_order_by_verification_finished(self,cursor):
+	# 	standards=Standard.query()	
+	# 	standards = standards.order(Standard.verification_finished)
+	# 	standards = standards.order(Standard.subject_title)
+	# 	standards = standards.order(Standard.subject_id)	
+	# 	standards = standards.order(Standard.standard_no)
+	# 	results, new_cursor, more = standards.fetch_page(100, start_cursor=cursor)
+	# 	return results, new_cursor, more
+
 	@classmethod
-	def subject_order(self,var1,var2,cursor):
+	def subject_order(self,var1,var2,cursor, year=str(datetime.datetime.now().year)):
 		standards = Standard.query()
+		standards = standards.filter(Standard.year == year)
 		standards = standards.filter(Standard.subject_title==var1)
 		if var2 == 'critique_finished':
 			standards = standards.order(Standard.critique_finished)
@@ -371,11 +510,31 @@ class Standard(ndb.Model):
 			return results, new_cursor, more
 		else:
 			results, new_cursor, more = standards.fetch_page(100, start_cursor=cursor)
-			return results, new_cursor, more
+			return results, new_cursor, 
+
+	@classmethod
+	def admin_subject_order(self,var1,cursor):
+		standards = Standard.query()
+		standards = standards.filter(Standard.subject_title==var1)
+		standards = standards.order(Standard.subject_title)
+		standards = standards.order(Standard.subject_id)
+		standards = standards.order(Standard.standard_no)
+		results, new_cursor, more = standards.fetch_page(100, start_cursor=cursor)
+		return results, new_cursor, more
 
 
 	@classmethod
-	def subject_list(self):
+	def subject_list(self, year=str(datetime.datetime.now().year)):
+		full= []
+		standards = Standard.query()
+		standards = standards.filter(Standard.year == year)
+		for result in standards:
+			if result.subject_title not in full:
+				full.append(result.subject_title)
+		return sorted(full)
+
+	@classmethod
+	def admin_subject_list(self):
 		full= []
 		standards = Standard.query()
 		for result in standards:
@@ -394,6 +553,17 @@ class Standard(ndb.Model):
 			memcache.add('subject_list', data, 60)
 			return data
 
+
+	@classmethod
+	def admin_get_subject_list(self):
+		data = memcache.get('admin_subject_list')
+		if data is not None:
+			return data
+		else:
+			data = self.admin_subject_list()
+			memcache.add('admin_subject_list', data, 60)
+			return data
+
 	@classmethod
 	def reset_subject_list(self):
 		data = self.subject_list()
@@ -401,6 +571,15 @@ class Standard(ndb.Model):
 		return data
 
 
+	@classmethod
+	def get_all_faculty_data(self, subject):
+		standards = Standard.query()
+		standards = standards.filter(Standard.year == self.current_time())
+		standards = standards.filter(Standard.subject_title == subject)
+		return standards
+
+
+			
 class Staff(ndb.Model):
 	year = ndb.StringProperty()
 	staff_id = ndb.StringProperty()
@@ -410,10 +589,24 @@ class Staff(ndb.Model):
 	subject = ndb.StringProperty()
 	email = ndb.StringProperty()
 
+	@classmethod
+	def current_time(self):
+		return str(datetime.datetime.now().year)
 
 	@classmethod
+	def get_staff_subject(self, email):
+		year = self.current_time()
+		u = User.query()
+		u = u.filter(Staff.year == year)
+		u = u.filter(Staff.email == email)
+		result = u.get()
+		return result.subject   
+		
+	@classmethod
 	def get_staff_list(self):
+		year = self.current_time()
 		staff = Staff.query()
+		staff = staff.filter(Staff.year == year)
 		staff = staff.order(Staff.subject)
 		staff = staff.order(Staff.last_name)
 		return staff

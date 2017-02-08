@@ -3,6 +3,25 @@
 
 {% block content %} 
 
+{% macro hold(old,new) %}
+  {% if old == new %}
+  {% else %}
+    <tr>
+       <td colspan="9" class="highlight"><strong>{{new}}</strong></td>
+    </tr>
+  {% endif %}
+ {%- endmacro %}
+
+ {% macro holdfaculty(old,new) %}
+  {% if old == new %}
+  {% else %}
+    <tr>
+       <td colspan="9" class="highlight-dark text-center"><h5><strong>{{new}}</strong></h5></td>
+    </tr>
+  {% endif %}
+ {%- endmacro %}
+
+
 {% macro icon(start,finish) %}
   {% if (start == True) and (finish == False) %}
   <i class="fa fa-check-square-o fa-2x" style="color:orange"></i>
@@ -26,6 +45,7 @@
 <div class="container" style="margin-top:20px;">
   <div class="row">
     <div class="col-sm-12">
+  
       <form class="form-inline" role="form" method="GET">
           <div class="form-group">
               <label>Subjects</label>
@@ -71,7 +91,7 @@
     <thead>
       <tr>
       <!-- 	<th>Edit</th> -->
-       <!--  <th>Doc</th> -->
+        <th></th>
         <th>Subject</th>
         <th>Standard</th>
         <th>Standards Critiqued</th>
@@ -85,9 +105,17 @@
     <tbody>
 
     {% for child in var %}
-      <tr>
+
+ 
+      {{holdfaculty(previous_faculty,child.subject_title)}}
+      {{hold(previous_subject,child.subject_id)}}
+   
+       {% set previous_subject = child.subject_id %}
+       {% set previous_faculty = child.subject_title %}
+      <tr> 
       	<!-- <td><a  href="../standards/{{child.key.id()}}" role="button"><i class="fa fa-pencil"></i></a></td> -->
-        <!-- <td><a  href="../xml/{{child.key.id()}}" role="button"><i class="fa fa-file-word-o"></i></a></td> -->
+        
+        <td><a  href="../xml/{{child.key.id()}}" role="button"><i class="fa fa-file-word-o"></i></a></td>
         <td><a  style="color: black;"href="../standards?q={{child.subject_title}}&o=A" role="button">{{child.subject_title}} - {{child.subject_id}}</a></td>
         <td><a  href="../standards/{{child.key.id()}}" role="button">{{type(child.standard_type)}}{{child.standard_no}} - v{{child.version}} | {{child.title}}</a></td>
         <td>{{icon(child.critique_started,child.critique_finished)}}</td>
@@ -96,9 +124,11 @@
         <td><strong>{{child.verification_difference}}</strong></td>
         <td><strong>{{child.verification_other_school}}</strong></td>
         <td><strong>{{child.verification_total}}</strong></td>
-      
-    {% endfor %}
       </tr>
+         
+    {% endfor %}
+    
+
     </tbody>
   </table>
     {% if urlcursor and q and o %}

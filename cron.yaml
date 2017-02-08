@@ -3,3 +3,28 @@ cron:
   url: /_ah/datastore_admin/backup.create?name=0135backup&kind=MetaSchool&kind=CritiqueModel&kind=SampleandReviewModel&kind=VerificationModel&kind=User&kind=Standard&kind=Staff&filesystem=gs&gs_bucket_name=backup-moderationonlinenz&namespace=0135
   schedule: every friday 12:00
   target: ah-builtin-python-bundle
+
+- description: 0102 Weekly Backup
+  url: /_ah/datastore_admin/backup.create?name=0102backup&kind=MetaSchool&kind=CritiqueModel&kind=SampleandReviewModel&kind=VerificationModel&kind=User&kind=Standard&kind=Staff&filesystem=gs&gs_bucket_name=backup-moderationonlinenz&namespace=0102
+  schedule: every friday 13:10
+  target: ah-builtin-python-bundle
+
+- description: 0129 Weekly Backup
+  url: /_ah/datastore_admin/backup.create?name=0129backup&kind=MetaSchool&kind=CritiqueModel&kind=SampleandReviewModel&kind=VerificationModel&kind=User&kind=Standard&kind=Staff&filesystem=gs&gs_bucket_name=backup-moderationonlinenz&namespace=0129
+  schedule: every friday 13:20
+  target: ah-builtin-python-bundle
+
+- description: 0240 Weekly Backup
+  url: /_ah/datastore_admin/backup.create?name=0240backup&kind=MetaSchool&kind=CritiqueModel&kind=SampleandReviewModel&kind=VerificationModel&kind=User&kind=Standard&kind=Staff&filesystem=gs&gs_bucket_name=backup-moderationonlinenz&namespace=0240
+  schedule: every friday 13:30
+  target: ah-builtin-python-bundle
+
+- description: 0084 Weekly Backup
+  url: /_ah/datastore_admin/backup.create?name=0084backup&kind=MetaSchool&kind=CritiqueModel&kind=SampleandReviewModel&kind=VerificationModel&kind=User&kind=Standard&kind=Staff&filesystem=gs&gs_bucket_name=backup-moderationonlinenz&namespace=0084
+  schedule: every friday 13:40
+  target: ah-builtin-python-bundle
+
+- description: 0351 Weekly Backup
+  url: /_ah/datastore_admin/backup.create?name=0351backup&kind=MetaSchool&kind=CritiqueModel&kind=SampleandReviewModel&kind=VerificationModel&kind=User&kind=Standard&kind=Staff&filesystem=gs&gs_bucket_name=backup-moderationonlinenz&namespace=0351
+  schedule: every friday 13:50
+  target: ah-builtin-python-bundle
