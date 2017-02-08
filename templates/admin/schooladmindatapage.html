@@ -11,14 +11,22 @@
     google.charts.setOnLoadCallback(drawChart);
 
     function drawChart() {
-      var jsonData = $.ajax({
-          url: "/schooladmin/data.json",
+      var jsonData2017 = $.ajax({
+          url: "/schooladmin/data.json?year=2017",
           dataType: "json",
           async: false,
           }).responseText;
+
+      var jsonData2016 = $.ajax({
+          url: "/schooladmin/data.json?year=2016",
+          dataType: "json",
+          async: false,
+          }).responseText;
+
           
       // Create our data table out of JSON data loaded from server.
-      var data = new google.visualization.DataTable(jsonData);
+      var data2017 = new google.visualization.DataTable(jsonData2017);
+      var data2016 = new google.visualization.DataTable(jsonData2016);
 
       var options = {
           title: 'Data Completion',
@@ -36,8 +44,13 @@
         };
 
       // Instantiate and draw our chart, passing in some options.
-      var chart = new google.charts.Bar(document.getElementById('chart_div'));
-      chart.draw(data, options);
+      var chart = new google.charts.Bar(document.getElementById('chart_div_2017'));
+      chart.draw(data2017, options);
+
+      var chart = new google.charts.Bar(document.getElementById('chart_div_2016'));
+      chart.draw(data2016, options);
+
+
     }
 
 </script>
@@ -48,9 +61,16 @@
 <div class="container" style="margin-top:20px;">
   <div class="row">
     <div class="col-sm-12">
-       
-        <div id="chart_div"><i class="fa fa-cog fa-spin fa-fw"></i> Loading...</div>
 
+
+       <h1>2017</h1>
+       <br>
+        <div id="chart_div_2017"><i class="fa fa-cog fa-spin fa-fw"></i> Loading...</div>
+
+        <h1>2016</h1>
+        <br>
+        
+        <div id="chart_div_2016"><i class="fa fa-cog fa-spin fa-fw"></i> Loading...</div>
   
     </div>
   </div>

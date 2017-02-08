@@ -296,9 +296,9 @@ class Standard(ndb.Model):
 
 
 	@classmethod
-	def create_data(self, subject=False):
+	def create_data(self, subject=False, year=str(datetime.datetime.now().year)):
 		standards = Standard.query()
-		standards = standards.filter(Standard.year == self.current_time())
+		standards = standards.filter(Standard.year == year)
 		if subject:
 			standards = standards.filter(Standard.subject_title == subject)
 			critique_data = list()
@@ -326,10 +326,10 @@ class Standard(ndb.Model):
 			return critique_data, sample_data, verification_data
 
 	@classmethod
-	def retrieve_data(self):
+	def retrieve_data(self, year):
 		data = dict()
 		for subject in self.subject_list():
-			subject, critique_data, sample_data, verification_data = self.create_data(subject)
+			subject, critique_data, sample_data, verification_data = self.create_data(subject, year)
 			data[subject] = {}
 			data[subject]['critique_data'] = self.percentage_entries(critique_data)
 			data[subject]['sample_data'] = self.percentage_entries(sample_data)
@@ -544,12 +544,12 @@ class Standard(ndb.Model):
 
 
 	@classmethod
-	def get_subject_list(self):
+	def get_subject_list(self, year):
 		data = memcache.get('subject_list')
 		if data is not None:
 			return data
 		else:
-			data = self.subject_list()
+			data = self.subject_list(year)
 			memcache.add('subject_list', data, 60)
 			return data
 

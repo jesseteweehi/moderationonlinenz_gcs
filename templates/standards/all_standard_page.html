@@ -81,9 +81,9 @@
 
   <h2>Standards</h2>
   {% if urlcursor and q and o %}
-    <p class="text-center"><a href="/standards?q={{q}}&o={{o}}&c={{urlcursor}}">Next Page <i class="fa fa-angle-double-right"></i></a></p>
+    <p class="text-center"><a href="/standardsyear/{{year}}?q={{q}}&o={{o}}&c={{urlcursor}}">Next Page <i class="fa fa-angle-double-right"></i></a></p>
     {% elif urlcursor %}
-    <p class="text-center"><a href="/standards?c={{urlcursor}}">Next Page <i class="fa fa-angle-double-right"></i></a></p>
+    <p class="text-center"><a href="/standardsyear/{{year}}?c={{urlcursor}}">Next Page <i class="fa fa-angle-double-right"></i></a></p>
     {% else %}
     <p></p>
     {% endif %}          
@@ -132,9 +132,9 @@
     </tbody>
   </table>
     {% if urlcursor and q and o %}
-    <p class="text-center"><a href="/standards?q={{q}}&o={{o}}&c={{urlcursor}}">Next Page <i class="fa fa-angle-double-right"></i></a></p>
+    <p class="text-center"><a href="/standardsyear/{{year}}?q={{q}}&o={{o}}&c={{urlcursor}}">Next Page <i class="fa fa-angle-double-right"></i></a></p>
     {% elif urlcursor %}
-    <p class="text-center"><a href="/standards?c={{urlcursor}}">Next Page <i class="fa fa-angle-double-right"></i></a></p>
+    <p class="text-center"><a href="/standardsyear/{{year}}?c={{urlcursor}}">Next Page <i class="fa fa-angle-double-right"></i></a></p>
     {% else %}
     <p class="text-center">No more results</p>
     {% endif %}

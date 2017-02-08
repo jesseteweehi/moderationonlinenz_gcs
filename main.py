@@ -54,7 +54,7 @@ class MainPage(Handler):
     def organise(self, user,check):
         year = str(datetime.datetime.now().year)
         if user and check:
-            return self.redirect('/standards/' + year)
+            return self.redirect('/standardsyear/' + year)
         if user and not check:
             return self.redirect('/login')
         if check and not user:
@@ -246,7 +246,7 @@ class AllStandards(Handler):
             else:
                 urlcursor= None
             
-            self.render('standards/all_standard_page.html',var=results,subject_list=subject_list, order_list=self.order_list, q=var1, o=var2, urlcursor=urlcursor, admin=admin)
+            self.render('standards/all_standard_page.html',var=results,subject_list=subject_list, order_list=self.order_list, q=var1, o=var2, urlcursor=urlcursor, admin=admin, year=post_id)
         else:
             self.redirect('/ouch')
 
@@ -1000,8 +1000,9 @@ class SchoolAdminJsonData(Handler):
         user = users.get_current_user()
         if check_creds(user, self.check_u(), admin=True) or users.is_current_user_admin():
             admin = hold_creds(user,self.check_u())
+            year = self.request.get('year')
             self.response.content_type='application/json'
-            raw_data = m.Standard.retrieve_data()
+            raw_data = m.Standard.retrieve_data(year)
             obj = google_chart_data_wrangle(raw_data)
             
             self.response.write(json.encode(obj))
